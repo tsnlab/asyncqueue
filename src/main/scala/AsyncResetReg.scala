@@ -4,7 +4,7 @@ package freechips.asyncqueue
 
 import Chisel._
 import chisel3.util.HasBlackBoxResource
-import chisel3.core.IntParam
+//import chisel3.core.IntParam
 
 /** This black-boxes an Async Reset
   *  (or Set)
@@ -33,7 +33,7 @@ import chisel3.core.IntParam
   */
 
 class AsyncResetReg(resetValue: Int = 0)
-  extends BlackBox(Map("RESET_VALUE" -> IntParam(resetValue))) with HasBlackBoxResource
+  extends BlackBox(Map("RESET_VALUE" -> resetValue.toString())) with HasBlackBoxResource
 {
   val io = new Bundle {
     val d = Bool(INPUT)
@@ -44,7 +44,7 @@ class AsyncResetReg(resetValue: Int = 0)
     val rst = Bool(INPUT)
   }
 
-  setResource("/vsrc/AsyncResetReg.v")
+  addResource("/vsrc/AsyncResetReg.v")
 }
 
 class SimpleRegIO(val w: Int) extends Bundle{

@@ -5,7 +5,7 @@ def scalacOptionsVersion(scalaVersion: String): Seq[String] = {
     //  https://github.com/scala/bug/issues/10047
     CrossVersion.partialVersion(scalaVersion) match {
       case Some((2, scalaMajor: Long)) if scalaMajor < 12 => Seq()
-      case _ => Seq("-Xsource:2.11")
+      case _ => Seq("-Xsource:2.13")
     }
   }
 }
@@ -28,9 +28,9 @@ name := "asyncqueue-lite"
 
 version := "1.0.0"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.13.6"
 
-crossScalaVersions := Seq("2.11.12", "2.12.4")
+crossScalaVersions := Seq("2.11.12", "2.12.4", "2.13.6")
 
 resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots"),
@@ -39,11 +39,10 @@ resolvers ++= Seq(
 
 // Provide a managed dependency on X if -DXVersion="" is supplied on the command line.
 val defaultVersions = Map(
-  "chisel3" -> "3.1.+",
-  "chisel-iotesters" -> "1.2.+"
+  "chisel3" -> "3.5.+",
   )
 
-libraryDependencies ++= (Seq("chisel3","chisel-iotesters").map {
+libraryDependencies ++= (Seq("chisel3").map {
   dep: String => "edu.berkeley.cs" %% dep % sys.props.getOrElse(dep + "Version", defaultVersions(dep)) })
 
 scalacOptions ++= scalacOptionsVersion(scalaVersion.value)
