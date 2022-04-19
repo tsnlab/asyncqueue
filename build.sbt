@@ -37,14 +37,25 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 
-// Provide a managed dependency on X if -DXVersion="" is supplied on the command line.
-val defaultVersions = Map(
-  "chisel3" -> "3.5.+",
-  )
+lazy val commonSettings = Seq(
+  libraryDependencies ++= Seq(
+    "edu.berkeley.cs" %% "chisel3" % "3.5.+",
+    "edu.berkeley.cs" %% "chiseltest" % "0.5.+" % "test"
+  ),
+  scalacOptions ++= Seq(
+    "-Ymacro-annotations",
+    "-language:reflectiveCalls",
+    "-deprecation",
+    "-feature",
+    "-Xcheckinit"
+  ),
+  addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % "3.5.+" cross CrossVersion.full),
+)
 
-libraryDependencies ++= (Seq("chisel3").map {
-  dep: String => "edu.berkeley.cs" %% dep % sys.props.getOrElse(dep + "Version", defaultVersions(dep)) })
-
-scalacOptions ++= scalacOptionsVersion(scalaVersion.value)
-
-javacOptions ++= javacOptionsVersion(scalaVersion.value)
+lazy val root = (project in file("."))
+  .settings(commonSettings, Seq(
+    name := "com.tsnlab.ipcore.npu",
+    libraryDependencies ++= Seq(
+      "org.easysoc" %% "layered-firrtl" % "1.1-SNAPSHOT",
+    ),
+  ))
